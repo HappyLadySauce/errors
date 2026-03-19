@@ -1,6 +1,7 @@
 package errors
 
 import (
+	stderrors "errors"
 	"fmt"
 	"io"
 )
@@ -338,4 +339,25 @@ func Cause(err error) error {
 		err = cause.Cause()
 	}
 	return err
+}
+
+// Join returns an error that wraps the given errors.
+// Any nil error values are discarded.
+// Join returns nil if every input is nil.
+// The error formats as the concatenation of the strings obtained
+// by calling the Error method of each element of errs, with a newline
+// between each string.
+//
+// A returned error wraps all non-nil errors and supports
+// errors.Is/As/Unwrap for each.
+//
+// Join 返回一个包装了给定错误的错误。
+// 任何 nil 错误值都会被丢弃。
+// 如果所有输入都是 nil，Join 返回 nil。
+// 错误格式化为调用每个 errs 元素的 Error 方法获得的字符串的连接，每个字符串之间有一个换行符。
+//
+// 返回的错误包装所有非 nil 错误，并支持对每个错误使用 errors.Is/As/Unwrap。
+// 这是一个对 Go 1.20+ 标准库 errors.Join 的包装。
+func Join(errs ...error) error {
+	return stderrors.Join(errs...)
 }
